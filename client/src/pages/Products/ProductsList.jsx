@@ -12,7 +12,19 @@ function ProductsList() {
         loadProducts()
     }, [])
     return (
-        <div>{products.map(product => <h1 key={product.id}>{product.name}</h1>)}</div>
+        <div>{products.map(product => <ProductsCard key={product.id} product={product}/>)}</div>
+    )
+}
+
+function ProductsCard({ product }) {
+    return (
+        <fieldset>
+            <legend>{product.name}</legend>
+            <p><span>Descripción</span> {product.description}</p>
+            <p><span>Precio</span> {product.price}</p>
+            <p><span>Cantidad Disponible</span> {product.stock}</p>
+            <p><span>Descuento</span> %{product.discount}</p>
+        </fieldset>
     )
 }
 
