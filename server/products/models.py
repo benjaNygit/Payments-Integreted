@@ -27,12 +27,10 @@ class Product(models.Model):
         primary_key=True, unique=True, max_length=16, default=custom_id
     )
     name = models.CharField(max_length=100)
-    description = models.TextField()
-    price = models.PositiveBigIntegerField()
-    stock = models.PositiveBigIntegerField(default=0)
-    discount = models.DecimalField(
-        max_digits=2, decimal_places=0, default=0, choices=DISCOUNTS
-    )
+    description = models.TextField(null=False)
+    price = models.PositiveIntegerField(null=False)
+    stock = models.PositiveIntegerField(default=0)
+    discount = models.PositiveSmallIntegerField(default=0, choices=DISCOUNTS)
 
     def make_purchase(self, quantity: int, email: String):
         """Realiza la compra de un producto
@@ -51,7 +49,7 @@ class Product(models.Model):
             product=self,
             quantity=quantity,
             email=email,
-            price=(self.price - ((self.discount * self.price)/100)) * quantity,
+            price=(self.price - ((self.discount * self.price) / 100)) * quantity,
         ).save()
         self.save()
         return
@@ -79,7 +77,12 @@ class Payment(models.Model):
     id = models.CharField(
         primary_key=True, unique=True, max_length=16, default=custom_id
     )
-    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, verbose_name="Producto relacionado")
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name="Producto relacionado",
+    )
     price = models.PositiveBigIntegerField()
     quantity = models.PositiveBigIntegerField()
     date_payment = models.DateTimeField(auto_now_add=True)
